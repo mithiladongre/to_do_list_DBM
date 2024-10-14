@@ -8,11 +8,14 @@ CREATE TABLE users(
 
 SELECT * FROM users;
 
+DROP TABLE list;
+
 CREATE TABLE list(
     user_id INTEGER,
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
     status BOOL NOT NULL, 
+    date DATE NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE 
 );
 

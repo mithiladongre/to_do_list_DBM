@@ -115,7 +115,7 @@ app.post("/add",(req,res)=>{
     const data=req.body.newEntry;
     console.log("Data received for adding: ",data);
     try{
-        db.run("INSERT INTO list (user_id, title, status) VALUES (?,?,?);",[req.session.user_id,data.title,data.status],(err,res)=>{
+        db.run("INSERT INTO list (user_id, title, status) VALUES (?,?,?,?);",[req.session.user_id,data.title,data.status,data.date],(err,res)=>{
             if(err){
                 console.error("Error in adding the item (server-database): ",err);
             }else{

@@ -77,3 +77,22 @@ body {
 .taskText {
   flex: 1;
 }
+
+.col{
+  position: relative;
+  display: flex;
+}
+
+.calender-button{
+  background-color: black;
+  position: absolute;
+  margin-left: 15rem;
+}
+
+.alert{
+  /* position: absolute; */
+  display: flex;
+  flex-direction: row;
+  padding: 0;
+  color: red;
+}
