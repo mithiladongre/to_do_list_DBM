@@ -1,21 +1,52 @@
-body {
-  background-color: #333;
-  color: #fff;
+/* Main body container styling */
+.OuterBody {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(37, 5, 133, 0.578);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; /* Align content vertically */
+  z-index: 1000;
 }
 
-/* .App {
+/* Heading for the To Do List App */
+.heading {
   text-align: center;
-} */
+  margin-bottom: 20px; /* Space between heading and container */
+  color: white;
+  font-size: 60px;
+}
 
+/* Styling for the container of tasks */
+.container {
+  background-color: rgb(105, 19, 185);
+  text-align: center;
+  box-shadow: 0 0 40px 15px rgba(69, 69, 69, 0.5);
+  border-radius: 8px;
+}
+
+/* Input form control */
+.form-control-form-control-lg {
+  background: white;
+  padding: 8px 16px;
+}
+
+/* Styling for completed tasks */
 .done .taskText {
   text-decoration: line-through;
   opacity: 0.3;
 }
 
+/* Task card styling */
 .card {
   margin-bottom: 20px;
 }
 
+/* Task background styling */
 .taskBg {
   background-color: #555;
   border-radius: 6px;
@@ -26,11 +57,13 @@ body {
   position: relative;
 }
 
+/* Task background inner content styling */
 .taskBg div {
   display: flex;
   align-items: center;
 }
 
+/* Styling for the icon buttons */
 .taskBg .iconsWrap {
   position: absolute;
   top: 50%;
@@ -47,7 +80,6 @@ body {
   color: #00ff89;
 }
 
-
 .taskBg .iconsWrap span:focus-visible {
   outline: none;
 }
@@ -56,10 +88,12 @@ body {
   color: yellow;
 }
 
+/* Margin for buttons */
 .mr-20 {
   margin-right: 20px;
 }
 
+/* Styling for task numbers */
 .taskNumber {
   color: #999;
   border: 1px solid #999;
@@ -74,6 +108,7 @@ body {
   justify-content: center;
 }
 
+/* Styling for task text */
 .taskText {
   flex: 1;
 }

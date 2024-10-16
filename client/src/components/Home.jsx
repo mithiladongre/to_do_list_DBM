@@ -141,9 +141,9 @@ function Home() {
   };
 
   return (
-    <div className="container App">
-      <h2>To Do List App (ReactJS)</h2>
-
+    <div className="OuterBody">
+      <h2 className='Heading'>To Do List App </h2>
+      <div className='container' >
       {updateData ? (
         <>
           <div className="row">
@@ -226,6 +226,7 @@ function Home() {
               </React.Fragment>
             );
           })}
+          </div>
     </div>
   );
 }
