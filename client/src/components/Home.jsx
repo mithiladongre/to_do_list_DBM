@@ -10,16 +10,12 @@ function Home() {
   const [toDo, setToDo] = useState([]);
   const [newTask, setNewTask] = useState('');
   const [updateData, setUpdateData] = useState('');
-  const [userData, setUserData] = useState(null);
   const [error, setError] = useState('');
-  const [name, setName] = useState('');
-  const navigate = useNavigate();
   const [date, setDate] = useState('');
-  const [currDate, setCurrDate] = useState(new Date());
-  const [numOfDays, setNumOfDays] = useState(0);
+  const navigate = useNavigate();
 
   axios.defaults.withCredentials = true;
-  
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -38,24 +34,24 @@ function Home() {
     getData();
   }, []);
 
-  console.log('User=>', name);
-
-  // fetch data
+  // Fetch tasks data from the server
   async function getData() {
     try {
       const response = await axios.get('http://localhost:3000/content');
+      console.log("data received: ",response.data);
       const tasks = response.data.rows.map((data) => ({
         id: data.id,
         title: data.title,
-        status: data.status, // Ensure 0 or false are handled correctly
+        status: data.status,
+        date: data.date
       }));
-      setToDo(tasks); // Update the toDo state with the new list of tasks
+      setToDo(tasks);
     } catch (err) {
-      console.error('Error in fetching the data on the client side: ', err);
+      console.error('Error fetching tasks data:', err);
     }
   }
 
-  // Add task 
+  // Add a new task
   const addTask = async () => {
     if (newTask && date) {
       let num = toDo.length + 1;
@@ -66,23 +62,23 @@ function Home() {
       try {
         await axios.post('http://localhost:3000/add', { newEntry });
       } catch (error) {
-        console.error('Error in adding the task (client): ', error);
+        console.error('Error adding the task:', error);
       }
     }
   };
 
-  // Delete task
+  // Delete a task
   const deleteTask = async (id) => {
     let newTasks = toDo.filter((task) => task.id !== id);
     setToDo(newTasks);
     try {
       await axios.delete('http://localhost:3000/delete', { data: { id } });
     } catch (error) {
-      console.error('Error in deleting the task (client): ', error);
+      console.error('Error deleting the task:', error);
     }
   };
 
-  // Mark task as done or completed
+  // Mark a task as done or undone
   const markDone = async (id) => {
     const newTasks = toDo.map((task) => {
       if (task.id === id) {
@@ -94,7 +90,7 @@ function Home() {
     try {
       await axios.patch('http://localhost:3000/mark', { id });
     } catch (error) {
-      console.error('Error in marking the task (client): ', error);
+      console.error('Error marking the task:', error);
     }
   };
 
@@ -108,14 +104,14 @@ function Home() {
     let newEntry = {
       id: updateData.id,
       title: e.target.value,
-      status: updateData.status ? true : false,
+      status: updateData.status,
     };
     setUpdateData(newEntry);
   };
 
   const updateTask = async () => {
     let filterRecords = [...toDo].filter((task) => task.id !== updateData.id);
-    let updatedObject = [...filterRecords, updateData]; 
+    let updatedObject = [...filterRecords, updateData];
     setToDo(updatedObject);
     setUpdateData('');
     try {
@@ -124,28 +120,25 @@ function Home() {
         title: updateData.title,
       });
     } catch (error) {
-      console.error('Error in updating the task (client):', error);
+      console.error('Error updating the task:', error);
     }
   };
 
-  // Handle selected date
-  const handleSelectedDate = (e) => {
-    const selectedDate = new Date(e.target.value);
-    setDate(e.target.value);
+  // Calculate days difference between task date and current date
+  const calculateDaysDifference = (taskDate) => {
     const currentDate = new Date();
-    setCurrDate(currentDate.toISOString().slice(0, 10));
-
-    const timeDiff = selectedDate - currentDate;
+    const dueDate = new Date(taskDate);
+    const timeDiff = dueDate.getTime() - currentDate.getTime();
     const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-    setNumOfDays(dayDiff);
+    console.log("date-diff: ",dayDiff);
+    return dayDiff;
   };
 
   return (
     <div className="OuterBody">
-      <h2 className='Heading'>To Do List App </h2>
-      <div className='container' >
-      {updateData ? (
-        <>
+      <h2 className="Heading">To Do List App</h2>
+      <div className="container">
+        {updateData ? (
           <div className="row">
             <div className="col">
               <input
@@ -163,9 +156,7 @@ function Home() {
               </button>
             </div>
           </div>
-        </>
-      ) : (
-        <>
+        ) : (
           <div className="row">
             <div className="col">
               <input
@@ -173,7 +164,12 @@ function Home() {
                 onChange={(e) => setNewTask(e.target.value)}
                 className="form-control form-control-lg"
               />
-              <input type="date" value={date} onChange={handleSelectedDate} />
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="form-control"
+              />
             </div>
             <div className="col-auto">
               <button className="btn btn-lg btn-success" onClick={addTask}>
@@ -181,52 +177,60 @@ function Home() {
               </button>
             </div>
           </div>
-        </>
-      )}
+        )}
 
-      {toDo && toDo.length ? '' : 'No tasks...'}
+        {toDo && toDo.length ? '' : 'No tasks...'}
 
-      {toDo &&
-        toDo
-          .sort((a, b) => (a.id > b.id ? 1 : -1))
-          .map((task, index) => {
-            return (
-              <React.Fragment key={task.id}>
-                <div className="col taskBg">
-                  <div className={task.status ? 'done' : ''}>
-                    <span className="taskNumber">{index + 1}</span>
-                    <span className="taskText">{task.title}</span>
-                  </div>
-                  <span className='alert'>
-                        {numOfDays === 0
+        {toDo &&
+          toDo
+            .sort((a, b) => (a.id > b.id ? 1 : -1))
+            .map((task, index) => {
+              console.log("task.date: ",task.date);
+              const numOfDays = calculateDaysDifference(task.date);
+
+              return (
+                <React.Fragment key={task.id}>
+                  <div className="col taskBg">
+                    <div className={task.status ? 'done' : ''}>
+                      <span className="taskNumber">{index + 1}</span>
+                      <span className="taskText">{task.title}</span>
+                    </div>
+
+                    <span className="alert">
+                      {numOfDays === 0
                         ? 'Due today'
                         : numOfDays > 0
                         ? `${numOfDays} days left`
                         : `${Math.abs(numOfDays)} days overdue`}
                     </span>
-                  <div className="iconsWrap">
-                    <span onClick={() => markDone(task.id)} title="Completed / Not Completed">
-                      <FontAwesomeIcon icon={faCircleCheck} />
-                    </span>
-                    {task.status ? null : (
-                      <span
-                        title="Edit"
-                        onClick={() =>
-                          setUpdateData({ id: task.id, title: task.title, status: task.status })
-                        }
-                      >
-                        <FontAwesomeIcon icon={faPen} />
+
+                    <div className="iconsWrap">
+                      <span onClick={() => markDone(task.id)} title="Completed / Not Completed">
+                        <FontAwesomeIcon icon={faCircleCheck} />
                       </span>
-                    )}
-                    <span onClick={() => deleteTask(task.id)} title="Delete">
-                      <FontAwesomeIcon icon={faTrashCan} />
-                    </span>
+                      {task.status ? null : (
+                        <span
+                          title="Edit"
+                          onClick={() =>
+                            setUpdateData({
+                              id: task.id,
+                              title: task.title,
+                              status: task.status,
+                            })
+                          }
+                        >
+                          <FontAwesomeIcon icon={faPen} />
+                        </span>
+                      )}
+                      <span onClick={() => deleteTask(task.id)} title="Delete">
+                        <FontAwesomeIcon icon={faTrashCan} />
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </React.Fragment>
-            );
-          })}
-          </div>
+                </React.Fragment>
+              );
+            })}
+      </div>
     </div>
   );
 }

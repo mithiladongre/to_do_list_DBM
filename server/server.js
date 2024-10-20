@@ -98,7 +98,7 @@ app.get("/home", (req, res) => {
 
 app.get("/content", (req, res) => {
     try {
-        db.all("SELECT list.id,title,status FROM list JOIN users ON users.id=list.user_id WHERE user_id= ? ;", [req.session.user_id], (err, rows) => {
+        db.all("SELECT list.id,title,status,date FROM list JOIN users ON users.id=list.user_id WHERE user_id= ? ;", [req.session.user_id], (err, rows) => {
             if (err) {
                 console.error("Error in fetching data from the database: ", err);
                 return res.status(500).json({ error: 'Database error' });
@@ -115,7 +115,7 @@ app.post("/add",(req,res)=>{
     const data=req.body.newEntry;
     console.log("Data received for adding: ",data);
     try{
-        db.run("INSERT INTO list (user_id, title, status) VALUES (?,?,?,?);",[req.session.user_id,data.title,data.status,data.date],(err,res)=>{
+        db.run("INSERT INTO list (user_id, title, status, date) VALUES (?,?,?,?);",[req.session.user_id,data.title,data.status,data.date],(err,res)=>{
             if(err){
                 console.error("Error in adding the item (server-database): ",err);
             }else{

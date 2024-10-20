@@ -45,3 +45,13 @@ WHERE id=7;
 UPDATE list 
 SET status = CASE WHEN status = 1 THEN 0 ELSE 1 END
 WHERE id = 5;
+
+SHOW tables;
+
+SELECT name FROM sqlite_master WHERE type = 'table';
+
+DELETE 
+FROM list
+WHERE id=1; 
+
+PRAGMA table_info(list);
