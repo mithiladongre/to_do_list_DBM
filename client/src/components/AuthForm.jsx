@@ -51,7 +51,7 @@ function App() {
   return (
     <div className="sign-in-login-modal">
       <div className="modal-content">
-        <h2 className="login-signin">{isSignIn ? 'Sign In' : 'Login'}</h2>
+        <h2 className="login-signin">{isSignIn ? 'Register' : 'Login'}</h2>
           <form onSubmit={handleSubmit}>
           <div className="input-group">
             <input
@@ -76,7 +76,7 @@ function App() {
             />
           </div>
           <div className="input-group">
-            <button type="submit">{isSignIn ? 'Sign In' : 'Login'}</button>
+            <button type="submit">{isSignIn ? 'Register' : 'Login'}</button>
           </div>
           <div className="error"><b>{message}</b></div>
         </form>

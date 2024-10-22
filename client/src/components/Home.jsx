@@ -163,19 +163,21 @@ function Home() {
                 value={newTask}
                 onChange={(e) => setNewTask(e.target.value)}
                 className="form-control form-control-lg"
+                placeholder='Add task...'
               />
               <input
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="form-control"
+                className='date-select'
               />
-            </div>
-            <div className="col-auto">
+              <div className="col-auto">
               <button className="btn btn-lg btn-success" onClick={addTask}>
                 Add Task
               </button>
             </div>
+            </div>
+            
           </div>
         )}
 
@@ -195,14 +197,15 @@ function Home() {
                       <span className="taskNumber">{index + 1}</span>
                       <span className="taskText">{task.title}</span>
                     </div>
-
-                    <span className="alert">
+                    { !task.status &&
+                      <span className="alert">
                       {numOfDays === 0
                         ? 'Due today'
                         : numOfDays > 0
                         ? `${numOfDays} days left`
                         : `${Math.abs(numOfDays)} days overdue`}
                     </span>
+                    }
 
                     <div className="iconsWrap">
                       <span onClick={() => markDone(task.id)} title="Completed / Not Completed">

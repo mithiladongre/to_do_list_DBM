@@ -27,12 +27,20 @@
   text-align: center;
   box-shadow: 0 0 40px 15px rgba(69, 69, 69, 0.5);
   border-radius: 8px;
+  padding: 1rem;
 }
 
 /* Input form control */
 .form-control-form-control-lg {
   background: white;
   padding: 8px 16px;
+}
+
+.date-select{
+  margin-left: 1rem;
+  margin-right: 1rem;
+  border-radius: 1rem;
+  border: none;
 }
 
 /* Styling for completed tasks */
@@ -116,13 +124,15 @@
 .col{
   position: relative;
   display: flex;
+  justify-content: space-between;
+  margin: 0.51rem;
 }
 
-.calender-button{
+/* .calender-button{
   background-color: black;
   position: absolute;
-  margin-left: 15rem;
-}
+  margin-left: 10rem;
+} */
 
 .alert{
   /* position: absolute; */
